@@ -81,9 +81,6 @@ interface IState {
  * those in the toolbar.
  */
 class OverflowMenu extends PureComponent<IProps, IState> {
-    declare public readonly props: Readonly<IProps>;
-    declare public readonly state: Readonly<IState>;
-
     /**
      * Initializes a new {@code OverflowMenu} instance.
      *
