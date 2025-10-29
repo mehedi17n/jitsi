@@ -7,8 +7,7 @@ import { hideSheet } from '../../../base/dialog/actions';
 import BottomSheet from '../../../base/dialog/components/native/BottomSheet';
 import { bottomSheetStyles } from '../../../base/dialog/components/native/styles';
 import { isSharedVideoEnabled } from '../../../shared-video/functions';
-import SpeakerStatsButton from '../../../speaker-stats/components/native/SpeakerStatsButton';
-import { isSpeakerStatsDisabled } from '../../../speaker-stats/functions';
+// Speaker stats removed from overflow menu per requirements
  
 import { customButtonPressed } from '../../actions.native';
 import { getVisibleNativeButtons } from '../../functions.native';
@@ -82,6 +81,9 @@ interface IState {
  * those in the toolbar.
  */
 class OverflowMenu extends PureComponent<IProps, IState> {
+    declare public readonly props: Readonly<IProps>;
+    declare public readonly state: Readonly<IState>;
+
     /**
      * Initializes a new {@code OverflowMenu} instance.
      *
@@ -106,8 +108,6 @@ class OverflowMenu extends PureComponent<IProps, IState> {
      */
     render() {
         const {
-            _isBreakoutRoomsSupported,
-            _isSpeakerStatsDisabled,
             dispatch
         } = this.props;
 
@@ -133,10 +133,8 @@ class OverflowMenu extends PureComponent<IProps, IState> {
 
         return (
             <BottomSheet>
-                { /* Only keep: Raise your hand, Start screen sharing, Enter tile view, Participants stats */ }
                 <RaiseHandButton { ...buttonProps } />
                 { this._renderOverflowMenuButtons(topButtonProps) }
-                { !_isSpeakerStatsDisabled && <SpeakerStatsButton { ...buttonProps } /> }
             </BottomSheet>
         );
     }
@@ -177,7 +175,7 @@ class OverflowMenu extends PureComponent<IProps, IState> {
             <>
                 {
                     _overflowMenuButtons
-                        ?.filter(({ key }) => key === 'screensharing' || key === 'tileview')
+                        ?.filter(({ key }) => key === 'tileview')
                         .map(({ Content, key, text, ...rest }: IToolboxNativeButton) => (
                             <Content
                                 { ...topButtonProps }
@@ -206,8 +204,7 @@ function _mapStateToProps(state: IReduxState) {
 
     return {
         _isBreakoutRoomsSupported: conference?.getBreakoutRooms()?.isSupported(),
-        _isSharedVideoEnabled: isSharedVideoEnabled(state),
-        _isSpeakerStatsDisabled: isSpeakerStatsDisabled(state)
+        _isSharedVideoEnabled: isSharedVideoEnabled(state)
     };
 }
 
