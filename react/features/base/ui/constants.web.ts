@@ -257,18 +257,29 @@ export const commonStyles = (theme: Theme) => {
             background: theme.palette.ui01,
             borderRadius: 6,
             margin: '0 auto',
-            padding: 6,
+            padding: '8px 12px',
             textAlign: 'center' as const,
             pointerEvents: 'all' as const,
             display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: theme.spacing(2),
             boxShadow: '0px 2px 8px 4px rgba(0, 0, 0, 0.25), 0px 0px 0px 1px rgba(0, 0, 0, 0.15)',
+            flexWrap: 'nowrap' as const,
 
+            // Ensure consistent spacing without relying on child margins
             '& > div': {
-                marginRight: theme.spacing(2),
+                marginRight: 0
+            },
 
-                '&:last-of-type': {
-                    marginRight: 0
-                }
+            [theme.breakpoints.down(640)]: {
+                gap: theme.spacing(1.5),
+                padding: '8px 10px'
+            },
+
+            [theme.breakpoints.down(360)]: {
+                gap: theme.spacing(1),
+                padding: '6px 8px'
             }
         }
     };

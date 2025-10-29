@@ -88,7 +88,7 @@ toolbox: {
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     borderRadius: 40,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     marginHorizontal: BaseTheme.spacing[4],
     marginBottom: BaseTheme.spacing[6],
     paddingVertical: BaseTheme.spacing[2],
@@ -119,7 +119,7 @@ toolboxContainer: {
     backgroundColor: 'transparent',
     flexDirection: 'column',
     maxWidth: 580,
-    marginHorizontal: 'auto',
+    alignSelf: 'center',
     marginVertical: BaseTheme.spacing[0],
     width: '100%'
 },
