@@ -68,14 +68,14 @@ export const navigationStyles = {
         top: 0
     },
 
-    // Connecting overlay styles with proper types
+    // Connecting overlay styles with proper types - WhatsApp-like smooth experience
     connectingOverlay: {
         position: 'absolute' as 'absolute',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 1)', // Full black background like Android
         alignItems: 'center' as 'center',
         justifyContent: 'center' as 'center',
         zIndex: 1000
