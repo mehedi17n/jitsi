@@ -1,5 +1,6 @@
-import React, { PureComponent, ReactNode } from 'react';
-import { SafeAreaView, ScrollView, View, ViewStyle } from 'react-native';
+import React, { ReactNode, useCallback } from 'react';
+import { ScrollView, View, ViewStyle } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { connect } from 'react-redux';
 
 import { IStore } from '../../../../app/types';
@@ -57,94 +58,70 @@ type Props = {
 
 /**
  * A component emulating Android's BottomSheet.
+ *
+ * @returns {JSX.Element} - The bottom sheet component.
  */
-class BottomSheet extends PureComponent<Props> {
-    /**
-     * Default values for {@code BottomSheet} component's properties.
-     *
-     * @static
-     */
-    static defaultProps = {
-        addScrollViewPadding: true,
-        showSlidingView: true
-    };
-
-    /**
-     * Initializes a new instance.
-     *
-     * @param {Props} props - The React {@code Component} props to initialize
-     * the new instance with.
-     */
-    constructor(props: Props) {
-        super(props);
-
-        this._onCancel = this._onCancel.bind(this);
-    }
+const BottomSheet = ({
+    addScrollViewPadding = true,
+    children,
+    dispatch,
+    onCancel,
+    renderFooter,
+    renderHeader,
+    showSlidingView = true,
+    style
+}: Props) => {
+    const insets = useSafeAreaInsets();
 
     /**
      * Handles the cancel event, when the user dismissed the sheet. By default we close it.
      *
      * @returns {void}
      */
-    _onCancel() {
-        if (this.props.onCancel) {
-            this.props.onCancel();
+    const _onCancel = useCallback(() => {
+        if (onCancel) {
+            onCancel();
         } else {
-            this.props.dispatch(hideSheet());
+            dispatch(hideSheet());
         }
-    }
+    }, [ onCancel, dispatch ]);
 
-    /**
-     * Implements React's {@link Component#render()}.
-     *
-     * @inheritdoc
-     * @returns {ReactElement}
-     */
-    render() {
-        const {
-            addScrollViewPadding,
-            renderHeader,
-            renderFooter,
-            showSlidingView,
-            style
-        } = this.props;
-
-        return (
-            <SlidingView
-                onHide = { this._onCancel }
-                position = 'bottom'
-                show = { Boolean(showSlidingView) }>
+    return (
+        <SlidingView
+            onHide = { _onCancel }
+            position = 'bottom'
+            show = { Boolean(showSlidingView) }>
+            <View
+                pointerEvents = 'box-none'
+                style = { styles.sheetContainer as ViewStyle }>
                 <View
                     pointerEvents = 'box-none'
-                    style = { styles.sheetContainer as ViewStyle }>
-                    <View
-                        pointerEvents = 'box-none'
-                        style = { styles.sheetAreaCover } />
-                    { renderHeader?.() }
-                    <SafeAreaView
+                    style = { styles.sheetAreaCover } />
+                {renderHeader?.()}
+                <View
+                    style = { [
+                        styles.sheetItemContainer,
+                        renderHeader
+                            ? styles.sheetHeader
+                            : styles.sheet,
+                        renderFooter && styles.sheetFooter,
+                        { paddingBottom: insets.bottom },
+                        style
+                    ] }>
+                    <ScrollView
+                        bounces = { false }
+                        showsVerticalScrollIndicator = { false }
                         style = { [
-                            styles.sheetItemContainer,
-                            renderHeader
-                                ? styles.sheetHeader
-                                : styles.sheet,
-                            renderFooter && styles.sheetFooter,
-                            style
-                        ] }>
-                        <ScrollView
-                            bounces = { false }
-                            showsVerticalScrollIndicator = { false }
-                            style = { [
-                                renderFooter && styles.sheet,
-                                addScrollViewPadding && styles.scrollView
-                            ] } >
-                            { this.props.children }
-                        </ScrollView>
-                        { renderFooter?.() }
-                    </SafeAreaView>
+                            renderFooter && styles.sheet,
+                            addScrollViewPadding && styles.scrollView
+                        ] } >
+                        {children}
+                    </ScrollView>
+                    {renderFooter?.()}
                 </View>
-            </SlidingView>
-        );
-    }
-}
+            </View>
+        </SlidingView>
+    );
+};
 
 export default connect()(BottomSheet);
